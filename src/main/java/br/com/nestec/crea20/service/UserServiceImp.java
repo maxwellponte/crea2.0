@@ -1,31 +1,34 @@
 package br.com.nestec.crea20.service;
 
 import br.com.nestec.crea20.model.Role;
-import br.com.nestec.crea20.model.UsuarioModel;
+import br.com.nestec.crea20.model.User;
 import br.com.nestec.crea20.repository.RoleIRepository;
-import br.com.nestec.crea20.repository.UsuarioIRepository;
-import lombok.NonNull;
+import br.com.nestec.crea20.repository.UserIRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
-public class UsuarioServiceImp implements UsuarioService{
-   @Autowired @Qualifier("usuarioRepository") @NonNull
-   private final UsuarioIRepository usuarioRepository;
+public class UserServiceImp implements UserService {
+   @Autowired
+   private final UserIRepository usuarioRepository;
 
-   @Autowired @Qualifier("roleRepository") @NonNull
+   @Autowired
    private final RoleIRepository roleRepository;
 
     @Override
-    public UsuarioModel salvarUsuario(UsuarioModel usuarioModel) {
-        log.info("salvando o novo usuario {} no banco de dados", usuarioModel.getUserName());
-        return usuarioRepository.save(usuarioModel);
+    public User salvarUsuario(User user) {
+        log.info("salvando o novo usuario {} no banco de dados", user.getUserName());
+        return usuarioRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return null;
     }
 
     @Override
@@ -35,22 +38,27 @@ public class UsuarioServiceImp implements UsuarioService{
     }
 
     @Override
-    public void addRoleToUsuario(String username, String rolename) {
-        log.info("adicionando a funcao {} ao usuario {}", rolename, username);
-        UsuarioModel usuarioModel = usuarioRepository.findByUserName(username);
-        Role role = roleRepository.findByName(rolename);
-        usuarioModel.getRoles().add(role);
-
+    public Role upadateRole(Role role) {
+        if (roleRepository.findById(role.getId()) != null){}
+        return null;
     }
 
     @Override
-    public UsuarioModel getUsuario(String username) {
+    public void addRoleToUsuario(String username, String rolename) {
+        log.info("adicionando a funcao {} ao usuario {}", rolename, username);
+        User user = usuarioRepository.findByUserName(username);
+        Role role = roleRepository.findByName(rolename);
+        user.setFuncao(role);
+    }
+
+    @Override
+    public User getUsuario(String username) {
         log.info("buscando o usuario {}", username);
         return usuarioRepository.findByUserName(username);
     }
 
     @Override
-    public List<UsuarioModel> getUsers() {
+    public List<User> getUsers() {
         log.info("buscando todos os usuarios");
         return usuarioRepository.findAll();
     }

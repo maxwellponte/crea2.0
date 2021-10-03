@@ -12,12 +12,12 @@ import java.util.Date;
 
 @Entity @Data
 @Table(name = "usuario") @NoArgsConstructor @AllArgsConstructor
-public class UsuarioModel {
+public class User {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Boolean ativo;
-    private String UserName;
+    private String userName;
 
     @Column(unique = true)
     private String cpf;
@@ -25,14 +25,11 @@ public class UsuarioModel {
     @Column(name="data_cadastro")
     private Date dataCadastro;
 
-
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @Column
-    private Collection<Role> roles = new ArrayList<>();
-
+    @OneToOne(fetch = FetchType.EAGER)
+    private Role funcao;
 }

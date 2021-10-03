@@ -1,10 +1,9 @@
 package br.com.nestec.crea20.controller;
 
 import br.com.nestec.crea20.model.Role;
-import br.com.nestec.crea20.model.UsuarioModel;
-import br.com.nestec.crea20.service.UsuarioService;
-import br.com.nestec.crea20.service.UsuarioServiceImp;
-import lombok.Data;
+import br.com.nestec.crea20.model.User;
+import br.com.nestec.crea20.request.RoleToUserForm;
+import br.com.nestec.crea20.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,34 +17,29 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    UsuarioService usuarioService;
+    UserService userService;
 
     @GetMapping(path = "/usuarios")
-    public ResponseEntity<List<UsuarioModel>> getUsuarios(){
-        return ResponseEntity.ok().body(usuarioService.getUsers());
+    public ResponseEntity<List<User>> getUsuarios(){
+        return ResponseEntity.ok().body(userService.getUsers());
     }
 
     @PostMapping (path = "/usuario/salvar")
-    public ResponseEntity<UsuarioModel> salvarUsuario(@RequestBody UsuarioModel usuarioModel){
+    public ResponseEntity<User> salvarUsuario(@RequestBody User user){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(usuarioService.salvarUsuario(usuarioModel));
+        return ResponseEntity.created(uri).body(userService.salvarUsuario(user));
     }
 
-    @PostMapping (path = "/role/salvar")
+    @PostMapping (path = "/funcao/salvar")
     public ResponseEntity<Role> salvarRole(@RequestBody Role role){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/salvar").toUriString());
-        return ResponseEntity.created(uri).body(usuarioService.salvarRole(role));
+        return ResponseEntity.created(uri).body(userService.salvarRole(role));
     }
 
-    @PostMapping (path = "/role/addaousuario")
+    @PostMapping (path = "/funcao/addaousuario")
     public ResponseEntity<?> addRoleAoUsuario(@RequestBody RoleToUserForm form){
-        usuarioService.addRoleToUsuario(form.getUsername(), form.getRolename());
+        userService.addRoleToUsuario(form.getUsername(), form.getRolename());
         return ResponseEntity.ok().build();
     }
-}
 
-@Data
-class RoleToUserForm{
-    private String username;
-    private String rolename;
 }
