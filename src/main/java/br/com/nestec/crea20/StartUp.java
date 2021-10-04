@@ -18,11 +18,11 @@ public class StartUp implements InitializingBean {
 
     @Override
     public void afterPropertiesSet(){
-        Role roleAdmin = new Role(1L, "Admin");
+        Role roleAdmin = new Role(1L, "Administrador");
         userService.salvarRole(roleAdmin);
         userService.salvarRole(new Role(2L, "Fiscal"));
         userService.salvarRole(new Role(3L, "Gestor"));
 
-        //userService.salvarUsuario(new User(1L, true, "Desenvolvedor", "12345678912",new Date(), "", "123456", roleAdmin));
+        userService.salvarUsuario(new User(1L, true, "Desenvolvedor", "12345678912",new Date(), "", "123456", roleAdmin));
     }
 }
