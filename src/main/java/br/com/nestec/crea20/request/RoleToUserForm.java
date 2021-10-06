@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 public class RoleToUserForm {
-    private String username;
+    private String cpf;
     private String rolename;
+    private Long userId;
+    private Long roleId;
 }

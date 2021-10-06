@@ -30,6 +30,6 @@ public class User {
     @Column(nullable = false)
     private String senha;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    private Role funcao;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
 }
