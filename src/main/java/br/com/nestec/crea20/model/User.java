@@ -1,5 +1,6 @@
 package br.com.nestec.crea20.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,21 +16,22 @@ import java.util.Date;
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "ativo")
+    private Boolean active;
+    @Column(name = "nome")
+    private String name;
 
-    private Boolean ativo;
-    private String userName;
-
-    @Column(unique = true)
+    @Column(unique = true, length = 11)
     private String cpf;
 
     @Column(name="data_cadastro")
-    private Date dataCadastro;
+    private Date registrationDate;
 
     private String email;
 
-    @Column(nullable = false)
-    private String senha;
+    @Column(nullable = false, name = "senha") @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER) @JoinColumn(name = "id_role")
     private Collection<Role> roles = new ArrayList<>();
 }

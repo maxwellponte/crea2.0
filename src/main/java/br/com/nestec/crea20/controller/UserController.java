@@ -10,9 +10,12 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -27,33 +30,54 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@RestController @RequiredArgsConstructor @RequestMapping(path = "/api")
-public class UsuarioController {
+@RestController @RequiredArgsConstructor @RequestMapping(path = "/api") @Slf4j
+public class UserController {
 
     @Autowired
     UserService userService;
 
-    @GetMapping(path = "/usuarios")
-    public ResponseEntity<List<User>> getUsuarios(){
-        return ResponseEntity.ok().body(userService.getUsers());
+    @GetMapping(path = "/listusuarios")
+    public ResponseEntity<List<User>> getUsers(@RequestHeader("Authorization") String token) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUser((String) auth.getPrincipal());
+        if (token != null && user.getActive() != false) {
+            try {
+              return ResponseEntity.ok().body(userService.getUsers());
+            }catch(Exception exception) {
+                log.error("usuário inativo no sistema", exception.getMessage());
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping (path = "/usuario/salvar")
-    public ResponseEntity<User> salvarUsuario(@RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.salvarUsuario(user));
+    public ResponseEntity<User> saveUser(@RequestBody User user){
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/usuario/salavar").toUriString());
+        return ResponseEntity.created(uri).body(userService.saveUser(user));
+    }
+
+    @DeleteMapping (path = "/usuario/deletar")
+    public void deleteUser(@RequestBody String cpf){
+        userService.deleteUser(cpf);
     }
 
     @PostMapping (path = "/funcao/salvar")
-    public ResponseEntity<Role> salvarRole(@RequestBody Role role){
+    public ResponseEntity<Role> saveRole(@RequestBody Role role){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/salvar").toUriString());
-        return ResponseEntity.created(uri).body(userService.salvarRole(role));
+        return ResponseEntity.created(uri).body(userService.saveRole(role));
+    }
+
+    @DeleteMapping (path = "/funcao/deletar")
+    public void deleteRole(@RequestBody String nome){
+        userService.deleteRole(nome);
     }
 
     @PostMapping (path = "/funcao/addaousuario")
-    public ResponseEntity<?> addRoleAoUsuario(@RequestBody RoleToUserForm form){
+    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserForm form){
         userService.addRoleToUser(form.getCpf(), form.getRoleId());
         return ResponseEntity.ok().build();
+
     }
 
     @GetMapping (path = "/token/refresh")
@@ -65,10 +89,10 @@ public class UsuarioController {
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
-                String username = decodedJWT.getSubject();
-                User user = userService.getUsuario(username);
+                String cpf = decodedJWT.getSubject();
+                User user = userService.getUser(cpf);
                 String acessToken = JWT.create()
-                        .withSubject(user.getUserName())
+                        .withSubject(user.getCpf())
                         .withExpiresAt(new Date(System.currentTimeMillis() +10*60*1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
