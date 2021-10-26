@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity @Data @NoArgsConstructor @AllArgsConstructor
-@Table(name = "funcao")
+@Table(name = "funcoes")
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

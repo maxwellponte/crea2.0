@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity @Getter @Setter
-@Table(name = "company_address") @NoArgsConstructor @AllArgsConstructor
+@Table(name = "enderecos") @NoArgsConstructor @AllArgsConstructor
 public class Address {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
@@ -17,10 +17,10 @@ public class Address {
     private String number;
     @Column(name = "complemento")
     private String complement;
-    @Column(nullable = false)
-    private String bairro;
-    @Column(nullable = false)
-    private String cidade;
+    @Column(nullable = false, name = "bairro")
+    private String neighborhood;
+    @Column(nullable = false, name = "cidade")
+    private String city;
     @Column(nullable = false)
     private String uf;
     @Column(nullable = false)

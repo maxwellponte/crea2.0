@@ -3,8 +3,10 @@ package br.com.nestec.crea20.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity @NoArgsConstructor @AllArgsConstructor @Getter @Setter
+@Table(name = "empresas")
 public class Company {
     @Id @GeneratedValue(strategy = GenerationType.AUTO )
     private Long id;
@@ -20,4 +22,6 @@ public class Company {
     private Boolean checked;
     @OneToOne(fetch = FetchType.EAGER) @JoinColumn(name = "endereco_id")
     private Address address;
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "companies")
+    private transient List<User> users;
 }

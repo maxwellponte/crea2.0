@@ -1,8 +1,10 @@
 package br.com.nestec.crea20.security;
 
-import br.com.nestec.crea20.filter.CustomAuthenticationFilter;
-import br.com.nestec.crea20.filter.CustomAuthorizationFilter;
+import br.com.nestec.crea20.filter.AuthenticationFilter;
+import br.com.nestec.crea20.filter.AuthorizationFilter;
+import br.com.nestec.crea20.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +23,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    ValidateSitac validate;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
@@ -28,8 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManagerBean(), validate);
+        authenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/token/refresh/**").permitAll();
@@ -40,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/usuario/**", "/api/funcao/**" )
                 .hasAnyAuthority("Administrador");
         http.authorizeRequests().anyRequest().authenticated();
-        http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(authenticationFilter);
+        http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

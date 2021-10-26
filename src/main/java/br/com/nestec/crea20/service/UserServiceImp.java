@@ -14,16 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserServiceImp implements UserService, UserDetailsService {
-   private final UserIRepository userRepository;
-   private final RoleIRepository roleRepository;
-   private final PasswordEncoder passwordEncoder;
+    private final UserIRepository userRepository;
+    private final RoleIRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException {
@@ -44,6 +41,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
     public User saveUser(User user) {
         log.info("salvando o novo usuario {} no banco de dados", user.getName());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRegistrationDate(new Date());
         return userRepository.save(user);
     }
 
@@ -80,7 +78,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     @Override
     public User getUser(String cpf) {
-        log.info("buscando o usuario {}", cpf);
+        log.info("buscando o usuario com cpf: {}", cpf);
         return userRepository.findByCpf(cpf);
     }
 

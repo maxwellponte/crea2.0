@@ -1,12 +1,11 @@
 package br.com.nestec.crea20.service;
 
-import br.com.nestec.crea20.model.Company;
-import br.com.nestec.crea20.model.Owner;
+import br.com.nestec.crea20.model.Owners;
 
 import java.util.List;
 
 public interface OwnerService {
-    Owner saveOwner(Owner owner);
+    Owners saveOwner(Owners owner);
     void deleteOwner(String cpfcnpj);
-    List<Owner> getOwners();
+    List<Owners> getOwners(String nomeCnpj);
 }

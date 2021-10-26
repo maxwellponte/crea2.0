@@ -30,7 +30,7 @@ public class CompanyController {
         return ResponseEntity.created(uri).body(companyService.saveCompany(company));
     }
     @DeleteMapping (path = "/empresa/deletar")
-    public void deleteUser(@RequestBody String cnpj){
+    public void deleteUser(@RequestParam String cnpj){
         companyService.deleteCompany(cnpj);
     }
 }
