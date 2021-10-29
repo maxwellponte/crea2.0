@@ -44,21 +44,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String password = request.getParameter("password");
         log.info("cpf: {}",cpf);
         log.info("password: {}",password);
-//        try {
             if(validate.valSitac(cpf, password)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(cpf, password);
                 return authenticationManager.authenticate(authenticationToken);
             }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken("",""));
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256(System.getProperty("secretName").getBytes());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
         String acessToken = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() +100*60*1000))

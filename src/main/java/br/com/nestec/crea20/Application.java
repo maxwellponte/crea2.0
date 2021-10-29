@@ -1,5 +1,6 @@
 package br.com.nestec.crea20;
 
+import br.com.nestec.crea20.security.CrypDecrypUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -17,9 +18,8 @@ public class Application {
 
 	@Bean
 	public PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder();
+		return new CrypDecrypUtil();
 	}
-
 }
 
 

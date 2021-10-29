@@ -25,8 +25,8 @@ public class ARTContract {
     private String unconstitutionalAction;
     @Column(name = "contratante")
     private String contractor;
-//    @Column(name = "proprietario")
-//    private String proprietario;
-//    @Column(name = "endereco")
-//    private String endereco;
+    @Column(name = "proprietario")
+    private String owner;
+    @Column(name = "endereco")
+    private String Address;
 }

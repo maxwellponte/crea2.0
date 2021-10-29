@@ -32,8 +32,8 @@ public class StartUp implements InitializingBean {
 //        userService.saveRole(new Role(2L, "Fiscal"));
 //        Role roleGestor = new Role(3L, "Gestor");
 //        userService.saveRole(roleGestor);
-//
-//        userService.saveUser(new User(1L, true, "Desenvolvedor", "12345678912",new Date(), "desenvolvedor@gmail.com", FEMININO, "123456","dev","","",new byte[100],"",false,"","",new ArrayList<Role>(Arrays.asList(roleAdmin))));
-//        userService.saveUser(new User(1L, true, "Maxwell", "60351336303",new Date(), "antonio_maxwell@hotmail,com", MASCULINO,"123456","maxwell.ponte","","",new byte[100],"",false,"","",new ArrayList<Role>(Arrays.asList(roleGestor))));
+
+//        userService.saveUser(new User(1L, true, "Desenvolvedor", "81990510000",new Date(), "desenvolvedor@gmail.com", FEMININO, "123456","dev","","",new byte[100],"",false,"","",new ArrayList<Role>(Arrays.asList(roleAdmin))));
+//        userService.saveUser(new User(1L, true, "Maxwell", "34161540026",new Date(), "antonio_maxwell@hotmail,com", MASCULINO,"Crea@2019","maxwell.ponte","","",new byte[100],"",false,"","",new ArrayList<Role>(Arrays.asList(roleGestor))));
     }
 }

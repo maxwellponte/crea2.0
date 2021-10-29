@@ -19,7 +19,7 @@ public class InspectionReportController {
     @Autowired
     InspectionReportService inspectionReportService;
     @PostMapping(path = "/cadastrarRelatorioFiscalizacao") @ValidateUserAnnotation
-    public ResponseEntity<InspectionReport> saveIR(@RequestBody InspectionReport inspectionReport){
+    public ResponseEntity<Object> saveIR(@RequestBody InspectionReport inspectionReport){
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/recursosFiscalizacao/cadastrarRelatorioFiscalizacao").toUriString());
         return ResponseEntity.created(uri).body(inspectionReportService.saveIR(inspectionReport));
     }

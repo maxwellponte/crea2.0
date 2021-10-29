@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping (path = "/usuario/salvar") @ValidateUserAnnotation
     public ResponseEntity<User> saveUser(@RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/usuario/salavar").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/usuario/salvar").toUriString());
         return ResponseEntity.created(uri).body(userService.saveUser(user));
     }
 

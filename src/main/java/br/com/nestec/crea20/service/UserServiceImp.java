@@ -4,6 +4,7 @@ import br.com.nestec.crea20.model.Role;
 import br.com.nestec.crea20.model.User;
 import br.com.nestec.crea20.repository.RoleIRepository;
 import br.com.nestec.crea20.repository.UserIRepository;
+import br.com.nestec.crea20.security.CrypDecrypUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,7 @@ import java.util.*;
 public class UserServiceImp implements UserService, UserDetailsService {
     private final UserIRepository userRepository;
     private final RoleIRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String cpf) throws UsernameNotFoundException {
@@ -40,7 +41,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
     @Override
     public User saveUser(User user) {
         log.info("salvando o novo usuario {} no banco de dados", user.getName());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(CrypDecrypUtil.encriptografarString(user.getPassword()));
         user.setRegistrationDate(new Date());
         return userRepository.save(user);
     }

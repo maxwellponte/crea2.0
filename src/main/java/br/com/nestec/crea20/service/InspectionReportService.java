@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface InspectionReportService {
-    InspectionReport saveIR(InspectionReport inspectionReport);
+    Object saveIR(InspectionReport inspectionReport);
     void deleteIR(Long id);
     List<InspectionReport> getIRs(User user);
 }
